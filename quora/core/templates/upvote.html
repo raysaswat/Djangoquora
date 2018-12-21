@@ -1,0 +1,32 @@
+{% block title %} {{ question.title }} {% endblock %}
+{% block body %}
+{% load upvote_tags %}
+    <h3><i>{{ question.title }}</i></h3>
+    {{ question.description }}
+    {% for answer in question.answer_set.all %}
+        <br>
+        <div>
+        <p>{{ answer.answer_text }} <span style="font-size: 15px">by [{{ answer.user }}]</span></p>
+        <form method="post" action="{% url 'answer:detail' question.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="type" value="vote">
+            <input type="hidden" name="answer_id" value="{{ answer.id }}">
+            {% for upvote in answer.upvote_set.all %}
+                {% if upvote.user == request.user %}
+
+                    <input type="submit" class="btn btn-sm btn-warning"
+                           value="Downvote|{{ answer.upvote_set.all.count }}">
+                {% else %}
+                    {% if forloop.counter == 1 %}
+                        <input type="submit" class="btn btn-success" value="Upvote|{{ answer.upvote_set.all.count }}">
+                    {% endif %}
+                {% endif %}
+            {% empty %}
+                <input type="submit" class="btn btn-sm btn-success" value="Upvote|{{ 0 }}">
+
+            {% endfor %}
+        </form>
+
+    {% endfor %}
+
+{% endblock %}
