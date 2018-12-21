@@ -33,3 +33,12 @@ class QuestionGroups(models.Model):
 
     def __unicode__(self):
         return self.name
+
+'''  
+class Upvote(models.Model):
+    user = models.ForeignKey(User)
+    answers = models.ForeignKey(Answer)
+
+    def __str__(self):
+        return self.user.username
+'''
